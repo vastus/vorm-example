@@ -4,7 +4,7 @@ require 'sinatra/base'
 require './controllers/users_controller'
 
 class Vorm < Sinatra::Base
+  enable :sessions
   use UsersController
-  set :views, 'views'
 end
 
