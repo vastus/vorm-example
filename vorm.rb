@@ -1,8 +1,10 @@
 require 'sinatra/base'
 
+#require './config'
+require './controllers/users_controller'
+
 class Vorm < Sinatra::Base
-  get '/' do
-    "Hi there."
-  end
+  use UsersController
+  set :views, 'views'
 end
 
