@@ -1,4 +1,4 @@
-require './app'
+require './vorm'
 
 run Vorm.new
 
