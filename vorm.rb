@@ -1,6 +1,8 @@
-require 'sinatra'
+require 'sinatra/base'
 
-get '/' do
-  "Hi there."
+class Vorm < Sinatra::Base
+  get '/' do
+    "Hi there."
+  end
 end
 
