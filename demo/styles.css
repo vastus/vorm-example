@@ -1,0 +1,101 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: #444;
+  width: 50em;
+  margin: 0 auto;
+  padding: 1em 2em;
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+
+h1, h2, h3
+{
+  color: #555;
+  font-weight: 300;
+  font-family: georgia, serif;
+}
+
+header {
+  margin-bottom: 1em;
+}
+
+header h1 a {
+  color: #444;
+  font-size: 1.8em;
+  font-weight: 200;
+  text-decoration: none;
+  text-shadow: -1px 1px 3px #ccc;
+  transition: all .5s;
+}
+
+header h1 a:hover {
+  transition: all .5s;
+  text-shadow: -3px 3px 3px #999;
+}
+
+footer {
+  margin-top: 2em;
+  padding-top: 1em;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+footer p {
+  color: #eee;
+  font-size: .8em;
+}
+
+/* Custom */
+#categories h1 {
+  font-size: 1.5em;
+}
+
+.category {
+  /* position: relative; */
+  clear: both;
+  padding: .8em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ccc;
+}
+
+.category:last-child {
+  margin-bottom: 0;
+  border: none;
+}
+
+.category .name a {
+  color: #203498;
+  font-size: .8em;
+}
+
+.category .description {
+  font-size: .95em;
+}
+
+.category .meta {
+  color: #999;
+  float: right;
+  font-size: .8em;
+  margin-top: -2.8em;
+}
+
+#category {
+  margin-bottom: 1em;
+}
+
+#category .name {
+  font-size: .8em;
+}
+
+#category .description {
+  font-size: .95em;
+}
+
+#topics .topic .title a {
+  font-size: 0.8em;
+}
+
+
