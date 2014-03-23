@@ -61,5 +61,5 @@ First draft of the UI.
 Check out the [static demo][static-demo] for initial UI.
 
 [ui-thumb]: img/ui-thumb.jpeg "UI"
-[static-demo]: ../demo/index.html "Static demo"
+[static-demo]: http://juhotaha.users.cs.helsinki.fi/vorm/demo/index.html "Static demo"
 
