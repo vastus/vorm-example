@@ -1,0 +1,11 @@
+[Guest]-(Reads topics ands replies)
+[Guest]-(Registers)
+[User]-(Logs in)
+[User]-(Searches topics and replies)
+[User]-(Reads unread topics)
+[User]-(CRUD Topics)
+[User]-(CRUD Replies)
+[Admin]-(Logs in)
+[Admin]-(CRUD Users)
+[Admin]-(CRUD Categories)
+
