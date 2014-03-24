@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bcrypt (3.1.7)
+    mysql2 (0.3.15)
     rack (1.5.2)
     rack-protection (1.5.2)
       rack
@@ -20,6 +22,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
+  mysql2
   shotgun
   sinatra
   slim
