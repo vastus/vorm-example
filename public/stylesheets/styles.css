@@ -1,0 +1,37 @@
+@import "vendor/normalize.css";
+
+body {
+  color: #333;
+  width: 60em;
+  margin: 0 auto;
+  padding: 1em 2em;
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: #444;
+}
+
+header {
+  border-bottom: 1px solid #999;
+}
+
+header h1 a {
+  color: #1e1e1e;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.field label {
+  display: block;
+  margin-bottom: .3em;
+}
+
+.field input {
+  margin-bottom: 1em;
+}
+
+.button input[type=submit] {
+  padding: .3em .5em;
+}
+
