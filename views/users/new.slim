@@ -1,3 +1,26 @@
 #register
   h1 Register
+  form(action="/users" method="POST")
+    - if @user.errors.any?
+      h2 Errors
+      ul
+        - for field, messages in @user.errors
+          - for msg in messages
+            li = "#{field.capitalize} #{msg}"
+    .field
+      label(for="user_username") Username
+      input(id="user_username" name="user[username]" type="text"
+        value="#{@user.username}" placeholder="johndoe")
+    .field
+      label(for="user_email") Email
+      input(id="user_email" name="user[email]" type="email"
+        value="#{@user.email}" placeholder="john.doe@example.com")
+    .field
+      label(for="user_password") Password
+      input(id="user_password" name="user[password]" type="password" placeholder="••••••••••")
+    .field
+      label(for="user_password_cofirmation") Password confirmation
+      input(id="user_password_cofirmation" name="user[password_confirmation]" type="password" placeholder="••••••••••")
+    .button
+      input(type="submit" value="Send")
 
