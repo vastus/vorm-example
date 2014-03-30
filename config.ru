@@ -1,4 +1,3 @@
-require './vorm'
-
+require './config/application'
 run Vorm.new
 
