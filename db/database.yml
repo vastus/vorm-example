@@ -1,0 +1,7 @@
+development:
+  adapter: mysql
+  database: vorm
+  username: testos
+  password: secretos
+  encoding: utf-8 
+
