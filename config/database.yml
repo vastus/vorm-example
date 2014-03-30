@@ -1,0 +1,21 @@
+test:
+  adapter: mysql
+  database: vorm_test
+  username: testos
+  password: secretos
+  encoding: utf-8 
+
+development:
+  adapter: mysql
+  database: vorm_development
+  username: testos
+  password: secretos
+  encoding: utf-8 
+
+production:
+  adapter: mysql
+  database: vorm_production
+  username: testos
+  password: secretos
+  encoding: utf-8 
+
