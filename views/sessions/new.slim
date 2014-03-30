@@ -1,0 +1,16 @@
+#login
+  h1 Login
+  form(action="/sessions" method="POST")
+    #errors
+      = @errors if @errors
+    .field
+      label(for="username") Username
+      input(id="username" name="username" type="text" placeholder="johndoe")
+    .field
+    .field
+      label(for="password") Password
+      input(id="password" name="password" type="password" placeholder="••••••••••")
+    .button
+      input(type="submit" value="Send")
+
+
