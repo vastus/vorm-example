@@ -1,3 +1,4 @@
+require 'yaml'
 require 'mysql2'
 
 module ORM
@@ -15,7 +16,8 @@ module ORM
     def validate!
       validators.each_key do |field|
         validators[field].each do |validator|
-          if msg = validator.call(send(field))
+          # if msg = validator.call(send(field))
+          if msg = validator.call(self)
             @errors[field] << msg
           end
         end
@@ -38,10 +40,20 @@ module ORM
     end
   end
 
+  class Config
+    @@db = YAML.load_file(File.expand_path('../../config/database.yml', __FILE__))
+
+    class << self
+      def db(key)
+        @@db[ENV['RACK_ENV']][key.to_s]
+      end
+    end
+  end
+
   class Model
     include Validatable
 
-    @@db = Mysql2::Client.new(host: 'localhost', username: 'testos', password: 'secretos', database: 'vorm')
+    @@db = Mysql2::Client.new(host: 'localhost', username: 'testos', password: 'secretos', database: Config.db(:database))
 
     attr_accessor :id, :errors
 
@@ -54,46 +66,38 @@ module ORM
       super()
     end
 
-    # def valid?
-    #   validate
-    #   errors.empty?
-    # end
+    def table
+      self.class.table
+    end
 
-    # make this private?
-    # def validate
-    #   fields = self.class.fields
-    #   validators = self.class.validators
-    #   fields.each do |field|
-    #     validators[field].each do |validator|
-    #       val = send(field)
-    #       p val
-    #       ret = validator.call(val)
-    #       p ret
-    #     end if validators[field]
-    #   end
-    # end
+    def fields
+      self.class.fields
+    end
 
-    # def save
-    #   keyvals = []
-    #   for field in self.class.fields
-    #     val = send(field) || 'NULL'
-    #     keyvals << "#{field}=#{val}"
-    #     #keyvals << "#{field}='#{self.field}'"
-    #   end
-    #   p keyvals.join(', ')
-    #   #p keyvals.join(', ')
-    #   # sql = "INSERT INTO #{table} SET #{attr}='#'"
-    #   # @@
-    # end
+    def save
+      return false if !valid?
+      k = fields
+      v = k.collect { |k| send(k).nil? ? 'NULL' : send(k) }
+      sql = <<-SQL
+        INSERT INTO #{table}
+        (#{k.join(', ')})
+        VALUES ('#{v.join("', '")}')
+      SQL
+      @@db.query(sql) # returns nil
+      self.class.find(last_id)
+    end
+
+    private
+    def last_id
+      sql = "SELECT LAST_INSERT_ID()"
+      res = @@db.query(sql)
+      res.first['LAST_INSERT_ID()']
+    end
 
     class << self
       def table(name=nil)
         @table ||= name
       end
-
-      # def validators
-      #   @validators
-      # end
 
       def fields(*args)
         args.each do |field|
@@ -102,20 +106,30 @@ module ORM
         @fields ||= args
       end
 
-      # def validates(field, &block)
-      #   @validators ||= {}
-      #   @validators[field] = [] if @validators[field].nil?
-      #   @validators[field] << block
-      # end
+      def find(id)
+        sql = "SELECT * FROM #{table} WHERE id='#{id}' LIMIT 1"
+        res = @@db.query(sql)
+        res.map(&method(:new)).first
+      end
 
-      # Fetch all the records from @table.
-      # @return [Array] array of subclass instances.
       def all
         sql = "SELECT * FROM #{table}"
         res = @@db.query(sql)
         res.map(&method(:new))
       end
+
+      def count
+        sql = "SELECT COUNT(*) FROM #{table}"
+        res = @@db.query(sql)
+        res.first['COUNT(*)']
+      end
+
+      def destroy_all
+        sql = "TRUNCATE #{table}"
+        @@db.query(sql)
+      end
     end
 
   end
 end
+
