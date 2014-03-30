@@ -1,24 +1,37 @@
+require 'spec_helper'
 require_relative '../../models/user'
 
 describe User do
-  it "knows its db table's name" do
+  before do
+    User.destroy_all
+  end
+
+  after(:all) do
+    User.destroy_all
+  end
+
+  it "class knows its table" do
     expect(User.table).to eq(:users)
   end
 
+  it "instance knows its table" do
+    expect(subject.table).to eq(:users)
+  end
+
+  describe "#id" do
+    it "responds to it" do
+      expect(subject).to respond_to(:id)
+    end
+  end
+
+  describe "#errors" do
+    it "responds to it" do
+      expect(subject).to respond_to(:errors)
+    end
+  end
+
   context "fields" do
-    describe "#id" do
-      it "responds to it" do
-        expect(subject).to respond_to(:id)
-      end
-    end
-
-    describe "#errors" do
-      it "responds to it" do
-        expect(subject).to respond_to(:errors)
-      end
-    end
-
-    describe "#email" do
+    describe "#username" do
       it "responds to it" do
         expect(subject).to respond_to(:username)
       end
@@ -75,6 +88,118 @@ describe User do
         expect(subject.errors[:email]).to include('cannot be empty')
       end
     end
+
+    describe "#password" do
+      let(:password) { 'S3cret0s' }
+
+      it "responds to it" do
+        expect(subject).to respond_to(:password)
+      end
+
+      it "can be set using the setter" do
+        subject.password = password
+        expect(subject.password).to eq(password)
+      end
+
+      it "can be set using the constructor" do
+        user = User.new(password: password)
+        expect(user.password).to eq(password)
+      end
+
+      it "is required (when creating a new record)" do
+        subject.valid?
+        expect(subject.errors[:password]).not_to be_empty
+      end
+
+      it "has an error message when not present" do
+        subject.valid?
+        expect(subject.errors[:password]).to include('cannot be empty')
+      end
+
+      it "is valid when passwords match" do
+        subject.password = subject.password_confirmation = password
+        subject.valid?
+        expect(subject.errors[:password]).to be_empty
+      end
+    end
+
+    describe "#password_confirmation" do
+      let(:password) { 'S3cret0s' }
+      
+      it "responds to it" do
+        expect(subject).to respond_to(:password_confirmation)
+      end
+
+      it "can be set using the setter" do
+        subject.password_confirmation = password
+        expect(subject.password_confirmation).to eq(password)
+      end
+
+      it "can be set using the constructor" do
+        user = User.new(password_confirmation: password)
+        expect(user.password_confirmation).to eq(password)
+      end
+
+      it "is required" do
+        subject.valid?
+        expect(subject.errors[:password_confirmation]).not_to be_empty
+      end
+
+      it "has an error message when not present" do
+        subject.valid?
+        expect(subject.errors[:password_confirmation]).to include('cannot be empty')
+      end
+
+      it "has an error message when passwords don't match" do
+        subject.password = password
+        subject.password_confirmation = password + 'o'
+        subject.valid?
+        expect(subject.errors[:password_confirmation]).to eq(["passwords don't match"])
+      end
+
+      it "is valid when passwords match" do
+        subject.password = subject.password_confirmation = password
+        subject.valid?
+        expect(subject.errors[:password_confirmation]).to be_empty
+      end
+    end
   end
+
+  describe "#save" do
+    let(:valid_user) { User.new(username: 'testos', 
+                                email: 'testos@teroni.fi',
+                                password: 'S3cret0s',
+                                password_confirmation: 'S3cret0s') }
+
+    let(:invalid_user) { User.new }
+
+    it "returns false when record is invalid" do
+      expect(invalid_user.save).to be(false)
+    end
+
+    it "returns user when record is valid" do
+      expect(valid_user.save.class).to eq(User)
+    end
+
+    it "saves the record to the database" do
+      valid_user.save.should change(User.count)
+      # p User.count
+      # valid_user.save
+      # p User.count
+      # expect(true).to eq(true)
+    end
+  end
+  # describe ".find" do
+  #   it "responds to it" do
+  #     expect(User).to respond_to(:find)
+  #   end
+
+  #   # it "ignores negative ids"
+
+  #   it "returns an object when found" do
+  #     p User.find(1)
+  #     expect(User.find(1)).not_to be_nil
+  #   end
+  # end
 end
 
