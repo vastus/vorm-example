@@ -1,3 +1,13 @@
 #user
   h1 Profile
 
+  .username
+    = @user.username
+  .email
+    = @user.email
+
+  .actions
+    p
+      a(href="/users/#{@user.id}/edit") Edit
+      |  your profile.
+
