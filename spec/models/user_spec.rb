@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../models/user'
 
 describe User do
   before do
@@ -182,24 +181,8 @@ describe User do
     end
 
     it "saves the record to the database" do
-      valid_user.save.should change(User.count)
-      # p User.count
-      # valid_user.save
-      # p User.count
-      # expect(true).to eq(true)
+      expect { valid_user.save }.to change(User, :count).by(1)
     end
   end
-  # describe ".find" do
-  #   it "responds to it" do
-  #     expect(User).to respond_to(:find)
-  #   end
-
-  #   # it "ignores negative ids"
-
-  #   it "returns an object when found" do
-  #     p User.find(1)
-  #     expect(User.find(1)).not_to be_nil
-  #   end
-  # end
 end
 
