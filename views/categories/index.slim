@@ -1,0 +1,19 @@
+#categories
+  h1 Categories
+  - if @categories.empty?
+    p There doesn't seem to be any categories, yet. 
+    p How about you go and <a href="/categories/new">create</a> some.
+
+  - for category in @categories
+    .category
+      .name
+        h2
+          a(href="categories/#{category.id}") = category.name
+      .description
+        = category.description
+      .meta
+        .topics-count
+          .count 23 topics
+        .replies-count
+          .count 121 replies
+
