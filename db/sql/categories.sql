@@ -2,6 +2,6 @@ DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(32) NOT NULL,
-  description VARCHAR(256) NOT NULL,
+  description VARCHAR(256) NOT NULL
 );
 
