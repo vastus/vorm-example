@@ -9,6 +9,7 @@ gem 'slim'
 
 group :development do
   gem 'shotgun'
+  gem 'awesome_print'
 end
 
 group :test do
