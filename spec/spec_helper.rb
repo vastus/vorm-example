@@ -21,6 +21,9 @@
 # end
 
 ENV['RACK_ENV'] ||= 'test'
+
+require 'ap'
+
 require File.join(File.dirname(__FILE__), '../config/application')
 Sinatra::Base.set(:environment, :test)
 Sinatra::Base.set(:run, false)
@@ -37,3 +40,4 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 end
+
