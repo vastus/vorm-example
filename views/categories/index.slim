@@ -16,4 +16,14 @@
           .count 23 topics
         .replies-count
           .count 121 replies
+      - if admin?
+        .actions
+          ul
+            li
+              a(href="/categories/#{category.id}/edit") Edit
+            li
+              a(href="/categories/#{category.id}/delete") Delete
+
+  .actions
+    a(href="/categories/new") New Category
 

@@ -1,0 +1,20 @@
+#category.new
+  h1 Create a Category
+  form(action="/categories" method="POST")
+    - if @category.errors.any?
+      h2 Errors
+      ul
+        - for field, messages in @category.errors
+          - for msg in messages
+            li = "#{field.capitalize} #{msg}"
+    .field
+      label(for="category_name") Name
+      input(id="category_name" name="category[name]" type="text"
+        value="#{@category.name}" size="80" placeholder="Category name")
+    .field
+      label(for="category_description") Description
+      textarea(id="category_description" name="category[description]"
+        cols="80" rows="7") = @category.description
+    .button
+      input(type="submit" value="Create")
+
