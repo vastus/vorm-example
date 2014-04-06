@@ -10,6 +10,7 @@ body {
 
 h1, h2, h3 {
   color: #444;
+  font-weight: 500;
 }
 
 header {
@@ -18,8 +19,60 @@ header {
 
 header h1 a {
   color: #1e1e1e;
+  font-weight: 600;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+.category {
+  padding-bottom: 1em;
+  border-bottom: 1px solid #eee;
+}
+
+.category:last-child {
+  border: none;
+}
+
+.category .meta {
+  color: #999;
+  float: right;
+  font-size: .8em;
+  margin-top: -2.8em;
+}
+
+.category .actions {
+  font-size: .8em;
+}
+
+.category .actions ul {
+  color: #444;
+  margin: .5em 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.category .actions ul:before {
+  content: "Actions: {";
+  font-style: italic;
+  font-family: georgia, serif;
+}
+
+.category .actions ul:after {
+  content: "}";
+  font-style: italic;
+}
+
+.category .actions li {
+  display: inline;
+}
+
+.category .actions li:not(:last-child):after {
+  content: ', ';
+  margin-left: -.2em;
+}
+
+.category .actions a {
+  color: rgb(40, 50, 190);
 }
 
 .field label {
@@ -27,7 +80,8 @@ header h1 a {
   margin-bottom: .3em;
 }
 
-.field input {
+.field input,
+.field textarea {
   margin-bottom: 1em;
 }
 
