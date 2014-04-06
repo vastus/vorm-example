@@ -1,10 +1,12 @@
 require 'sinatra/base'
 require 'slim'
+require 'ap'
 
 require_relative '../models/category'
 
 class CategoriesController < Sinatra::Base
   set :views, 'views'
+  helpers Helpers
 
   # ['/users/:id/edit'].each do |path|
   #   before path do
@@ -12,43 +14,54 @@ class CategoriesController < Sinatra::Base
   #   end
   # end
 
-  # New.
+  # Index.
   get '/' do
     @categories = Category.all
     slim :'categories/index'
   end
 
+  # New.
+  get '/categories/new' do
+    @category = Category.new
+    slim :'categories/new'
+  end
+
   # Show.
-  get '/users/:id' do
-    @user = User.find(params[:id])
-    slim :'users/show'
+  get '/categories/:id' do
+    @category = Category.find(params[:id])
+    slim :'categories/show'
   end
 
   # Create.
-  post '/users' do
-    @user = User.new(params[:user])
-    if @user.save
+  post '/categories' do
+    @category = Category.new(params[:category])
+    if @category.save
       redirect to(url('/'))
     else
-      slim :'users/new'
+      slim :'categories/new'
     end
   end
 
   # Edit.
-  get '/users/:id/edit' do
-    @user = User.find(params[:id])
-    slim :'users/edit'
+  get '/categories/:id/edit' do
+    @category = Category.find(params[:id])
+    slim :'categories/edit'
   end
 
   # Update.
-  post '/users/:id' do
-    "To be implemented."
-    # @user = User.find(params[:id])
-    # if @user.update(params[:user])
-    #   redirect to(url("/users/#{@user.id}"))
-    # else
-    #   slim :'users/edit'
-    # end
+  put '/categories/:id' do
+    @category = Category.find(params[:id])
+    if @category.update(params[:category])
+      redirect to(url('/'))
+    else
+      slim :'categories/edit'
+    end
+  end
+  
+  # Delete.
+  get '/categories/:id/delete' do
+    Category.destroy(params[:id])
+    redirect to(url('/'))
   end
 
   private
@@ -57,5 +70,6 @@ class CategoriesController < Sinatra::Base
       redirect to(url("/login"))
     end
   end
+
 end
 
