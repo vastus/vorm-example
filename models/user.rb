@@ -70,6 +70,10 @@ class User < ORM::Model
     password_hash == hashed
   end
 
+  def admin?
+    true
+  end
+
   def save
     return false if !valid?
     encrypt_password
@@ -99,20 +103,6 @@ class User < ORM::Model
     salt = BCrypt::Engine.generate_salt
     self.password_salt = salt
     self.password_hash = BCrypt::Engine::hash_secret(password, salt)
-  end
-
-  class << self
-    def find_by(field, value)
-      value = @@db.escape(value)
-      table = 'users'
-      sql = <<-SQL
-        SELECT * FROM #{table}
-        WHERE #{field}='#{value}'
-        LIMIT 1
-      SQL
-      res = @@db.query(sql)
-      res.map(&method(:new)).first
-    end
   end
 end
 
