@@ -16,7 +16,6 @@ module ORM
     def validate!
       validators.each_key do |field|
         validators[field].each do |validator|
-          # if msg = validator.call(send(field))
           if msg = validator.call(self)
             @errors[field] << msg
           end
