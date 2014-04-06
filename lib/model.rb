@@ -86,6 +86,18 @@ module ORM
       self.class.find(last_id)
     end
 
+    def update_with(id, k, v)
+      v = v.map { |v| @@db.escape(v) }
+      s = k.zip(v).map { |s| "#{s[0]}='#{s[1]}'" }.join(', ')
+      sql = <<-SQL
+        UPDATE #{table}
+        SET #{s}
+        WHERE id=#{self.id}
+      SQL
+      @@db.query(sql)
+      self.class.find(id)
+    end
+
     private
     def last_id
       sql = "SELECT LAST_INSERT_ID()"
@@ -111,6 +123,17 @@ module ORM
         res.map(&method(:new)).first
       end
 
+      def find_by(field, value)
+        value = @@db.escape(value)
+        sql = <<-SQL
+          SELECT * FROM #{table}
+          WHERE #{field}='#{value}'
+          LIMIT 1
+        SQL
+        res = @@db.query(sql)
+        res.map(&method(:new)).first
+      end
+
       def all
         sql = "SELECT * FROM #{table}"
         res = @@db.query(sql)
@@ -123,12 +146,21 @@ module ORM
         res.first['COUNT(*)']
       end
 
+      def destroy(id)
+        record = find(id)
+        sql = <<-SQL
+          DELETE FROM #{table}
+          WHERE id=#{record.id}
+        SQL
+        @@db.query(sql)
+        record
+      end
+
       def destroy_all
         sql = "TRUNCATE #{table}"
         @@db.query(sql)
       end
     end
-
   end
 end
 
