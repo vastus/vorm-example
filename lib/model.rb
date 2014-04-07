@@ -62,7 +62,7 @@ module ORM
       params.each do |attr, value|
         self.send("#{attr}=", value)
       end if params
-      super()
+      super() # is this rly necessary?
     end
 
     def table
@@ -71,6 +71,14 @@ module ORM
 
     def fields
       self.class.fields
+    end
+
+    def update_attribute(key, value)
+      send("#{key}=", value) if key
+    end
+
+    def update_attributes(hash)
+      hash.each { |k, v| update_attribute(k, v) }
     end
 
     def save
