@@ -60,9 +60,8 @@ module ORM
     def initialize(params={})
       @errors = Hash.new { |k, v| k[v] = [] }
       params.each do |attr, value|
-        self.send("#{attr}=", value)
+        send("#{attr}=", value)
       end if params
-      super() # is this rly necessary?
     end
 
     def table
