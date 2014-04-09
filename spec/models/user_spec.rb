@@ -176,8 +176,8 @@ describe User do
       expect(invalid_user.save).to be(false)
     end
 
-    it "returns user when record is valid" do
-      expect(valid_user.save.class).to eq(User)
+    it "returns true when record is valid" do
+      expect(valid_user.save).to be(true)
     end
 
     it "saves the record to the database" do
