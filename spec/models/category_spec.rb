@@ -291,7 +291,11 @@ describe Category do
       expect(Category).to respond_to(:find)
     end
 
-    xit "raises an exception when not found"
+    it "raises an exception when not found" do
+      id = 0
+      expect { Category.find(id) }
+        .to raise_error(ORM::RecordNotFound, "Category not found with id=#{id}")
+    end
 
     it "returns an object when found" do
       category.save

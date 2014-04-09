@@ -2,6 +2,12 @@ require 'yaml'
 require 'mysql2'
 
 module ORM
+  class ORMError < StandardError
+  end
+
+  class RecordNotFound < ORMError
+  end
+
   module Validatable
     def self.included(base)
       base.extend(ClassMethods)
@@ -170,9 +176,13 @@ module ORM
       end
 
       def find(id)
-        sql = "SELECT * FROM #{table} WHERE id='#{id}' LIMIT 1"
-        res = @@db.query(sql)
-        res.map(&method(:new)).first
+        sql = <<-SQL
+          SELECT * FROM #{table}
+          WHERE id='#{@@db.escape(id.to_s)}'
+          LIMIT 1
+        SQL
+        res = @@db.query(sql).map(&method(:new)).first
+        res ? res : raise(RecordNotFound, "#{self} not found with id=#{id}")
       end
 
       def find_by(field, value)
