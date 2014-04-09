@@ -21,7 +21,7 @@ module ORM
     def validate!
       _validators.each_key do |field|
         _validate!(field)
-      end
+      end if _validators
     end
 
     private
