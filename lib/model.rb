@@ -12,18 +12,22 @@ module ORM
       errors.empty?
     end
 
-    private
     def validate!
-      validators.each_key do |field|
-        validators[field].each do |validator|
-          if msg = validator.call(self)
-            @errors[field] << msg
-          end
+      _validators.each_key do |field|
+        _validate!(field)
+      end
+    end
+
+    private
+    def _validate!(field)
+      _validators[field].each do |validator|
+        if msg = validator.call(self)
+          @errors[field] << msg
         end
       end
     end
 
-    def validators
+    def _validators
       self.class.validators
     end
 
@@ -80,6 +84,12 @@ module ORM
       hash.each { |k, v| update_attribute(k, v) }
     end
 
+    # persistable
+    def new_record?
+      !id
+    end
+
+    # persistable
     def save
       return false if !valid?
       k = fields
@@ -90,26 +100,61 @@ module ORM
         VALUES ('#{v.join("', '")}')
       SQL
       @@db.query(sql) # returns nil
-      self.class.find(last_id)
+      attrs = _find(_last_id)
+      update_attributes(attrs)
+      true
     end
 
+    # persistable
+    def update(params)
+      if new_record?
+        return false
+      end
+      # throw this in update_attrs
+      params.keys.each do |k|
+        update_attribute(k, params[k])
+        _validate!(k)
+      end
+      if errors.empty?
+        update_with(id, params.keys, params.values)
+        return true
+      else
+        return false
+      end
+    end
+
+    # persistable
     def update_with(id, k, v)
       v = v.map { |v| @@db.escape(v) }
       s = k.zip(v).map { |s| "#{s[0]}='#{s[1]}'" }.join(', ')
       sql = <<-SQL
         UPDATE #{table}
         SET #{s}
-        WHERE id=#{self.id}
+        WHERE id=#{id}
       SQL
       @@db.query(sql)
-      self.class.find(id)
+      update_attributes(_find(id)) 
     end
 
     private
-    def last_id
-      sql = "SELECT LAST_INSERT_ID()"
+    # refactor
+    def _last_id
+      sql = <<-SQL
+        SELECT LAST_INSERT_ID()
+        AS id FROM #{table}
+        LIMIT 1
+      SQL
       res = @@db.query(sql)
-      res.first['LAST_INSERT_ID()']
+      res.first['id']
+    end
+
+    def _find(id)
+      sql = <<-SQL
+        SELECT * FROM #{table}
+        WHERE id=#{id}
+        LIMIT 1
+      SQL
+      @@db.query(sql).first
     end
 
     class << self
