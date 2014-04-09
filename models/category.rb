@@ -14,11 +14,18 @@ class Category < ORM::Model
     end
   end
 
-  # validates :name, -> (cat) do
-  #   if cat.name && !self.find_by(:name, cat.name).nil?
-  #     "must be unique"
-  #   end
-  # end
+  validates :name, -> (cat) do
+    if cat.name
+      found = self.find_by(:name, cat.name)
+      if cat.new_record? && found
+        return "must be unique"
+      end
+
+      if !cat.new_record? && found && cat.id != found.id
+        return "must be unique"
+      end
+    end
+  end
 
   validates :description, -> (cat) do
     if cat.name.nil? || cat.name.strip.empty?
@@ -30,14 +37,6 @@ class Category < ORM::Model
     if cat.description && cat.description.length > 255
       "cannot be longer than 255"
     end
-  end
-
-  def update(params)
-    self.name = params[:name] if params[:name]
-    self.description = params[:description] if params[:description]
-    k = [:name, :description]
-    v = [name, description]
-    update_with(self.id, k, v)
   end
 end
 
