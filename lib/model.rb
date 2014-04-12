@@ -203,9 +203,9 @@ module ORM
       end
 
       def count
-        sql = "SELECT COUNT(*) FROM #{table}"
+        sql = "SELECT COUNT(*) AS count FROM #{table}"
         res = @@db.query(sql)
-        res.first['COUNT(*)']
+        res.first['count']
       end
 
       def destroy(id)
