@@ -196,6 +196,12 @@ module ORM
         res.map(&method(:new)).first
       end
 
+      def create(params={})
+        record = new(params)
+        record.save
+        record
+      end
+
       def all
         sql = "SELECT * FROM #{table}"
         res = @@db.query(sql)
