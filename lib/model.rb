@@ -186,7 +186,7 @@ module ORM
       end
 
       def find_by(field, value)
-        value = @@db.escape(value)
+        value = @@db.escape(value.to_s)
         sql = <<-SQL
           SELECT * FROM #{table}
           WHERE #{field}='#{value}'
