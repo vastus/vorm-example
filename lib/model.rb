@@ -219,7 +219,7 @@ module ORM
       end
 
       def destroy_all
-        sql = "TRUNCATE #{table}"
+        sql = "DELETE FROM #{table}"
         @@db.query(sql)
       end
     end
