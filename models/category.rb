@@ -1,4 +1,5 @@
 require_relative '../lib/model'
+require_relative '../models/topic'
 
 class Category < ORM::Model
   # Table name.
@@ -37,6 +38,10 @@ class Category < ORM::Model
     if cat.description && cat.description.length > 255
       "cannot be longer than 255"
     end
+  end
+
+  def topics
+    Topic.where(category_id: id)
   end
 end
 
