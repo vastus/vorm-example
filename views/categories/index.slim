@@ -13,7 +13,7 @@
         = category.description
       .meta
         .topics-count
-          .count 23 topics
+          .count = "#{category.topics.size} topics"
         .replies-count
           .count 121 replies
       - if admin?
