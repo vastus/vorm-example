@@ -324,14 +324,14 @@ describe Category do
       expect { Category.create({}) }.not_to raise_error
     end
 
-    xit "calls new with the given params"
+    # xit "calls new with the given params"
 
     it "returns a new category" do
       created = Category.create
       expect(created).to be_instance_of(Category)
     end
 
-    xit "calls save"
+    # xit "calls save"
 
     it "saves the created object to the db" do
       expect { Category.create(cat_params) }.to change(Category, :count).by(1)
@@ -341,6 +341,44 @@ describe Category do
       created = Category.create(cat_params)
       expect(created.name).to eq(category.name)
       expect(created.description).to eq(category.description)
+    end
+  end
+
+  context "relations" do
+    describe "#topics" do
+      before { category.save }
+
+      let(:another_category) { Category.create(name: "Another", description: "Dummy category description") }
+
+      let(:topic_params) {
+        {title: "Present yourself", body: "Say your name, see my name.", category_id: category.id}
+      }
+
+      let(:topic) { Topic.new(topic_params) }
+
+      let(:another_topic) { Topic.new(topic_params.merge(category_id: another_category.id)) }
+
+      it "method exists" do
+        expect(subject).to respond_to(:topics)
+      end
+
+      it "returns an empty array when no topics found" do
+        expect(category.topics).to eq([])
+      end
+
+      it "returns an empty array when no topics found under this category" do
+        another_topic.save
+        expect(category.topics).to eq([])
+      end
+
+      it "returns a singleton array w/ topic that belongs to this category" do
+        topic.save
+        another_topic.save
+        found = category.topics
+        expect(found[0].title).to eq(topic.title)
+        expect(found[0].body).to eq(topic.body)
+        expect(found[0].category_id).to eq(topic.category_id)
+      end
     end
   end
 end
