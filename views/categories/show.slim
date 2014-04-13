@@ -1,0 +1,15 @@
+#category
+  h1 = @category.name
+
+  - for topic in @category.topics
+    #topics
+      .title
+        h2
+          a(href="topics/#{topic.id}") = topic.title
+      .body
+        = topic.body
+
+  .actions
+    a(href="/categories/#{@category.id}/topics/new") New Topic
+
+
