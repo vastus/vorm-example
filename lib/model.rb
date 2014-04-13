@@ -131,7 +131,7 @@ module ORM
 
     # persistable
     def update_with(id, k, v)
-      v = v.map { |v| @@db.escape(v) }
+      v = v.map { |v| @@db.escape(v.to_s) }
       s = k.zip(v).map { |s| "#{s[0]}='#{s[1]}'" }.join(', ')
       sql = <<-SQL
         UPDATE #{table}
@@ -212,6 +212,20 @@ module ORM
         sql = "SELECT COUNT(*) AS count FROM #{table}"
         res = @@db.query(sql)
         res.first['count']
+      end
+
+      # TODO: test this
+      def where(conds)
+        k = conds.keys
+        v = conds.values
+        v = v.map { |v| @@db.escape(v.to_s) }
+        s = k.zip(v).map { |s| "#{s[0]}='#{s[1]}'" }.join(' AND ')
+        sql = <<-SQL
+          SELECT * FROM #{table}
+          WHERE #{s}
+        SQL
+        res = @@db.query(sql)
+        res.map(&method(:new))
       end
 
       def destroy(id)
