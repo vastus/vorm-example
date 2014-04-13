@@ -5,6 +5,7 @@ require './models/concerns/helpers'
 require './controllers/users_controller'
 require './controllers/sessions_controller'
 require './controllers/categories_controller'
+require './controllers/topics_controller'
 
 Slim::Engine.set_default_options(:pretty => true, :sort_attrs => false)
 
@@ -14,5 +15,6 @@ class Vorm < Sinatra::Base
   use UsersController
   use SessionsController
   use CategoriesController
+  use TopicsController
 end
 
