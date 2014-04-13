@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS topics;
 CREATE TABLE topics (
   id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(32) NOT NULL,
@@ -7,10 +6,9 @@ CREATE TABLE topics (
 
   PRIMARY KEY (id),
   INDEX (category_id),
-  FOREIGN KEY (category_id)
-    REFERENCES categories(id)
-  --   ON DELETE CASCADE
-    -- ON UPDATE ref_opt
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
     -- ref_opt: RESTRICT | CASCADE | SET NULL | NO ACTION
 );
 
