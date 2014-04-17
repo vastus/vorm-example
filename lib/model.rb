@@ -59,10 +59,22 @@ module ORM
     end
   end
 
+  class DB
+    @db = Mysql2::Client.new(host: 'localhost', username: 'testos', password: 'secretos', database: 'vorm_development')
+
+    class << self
+      def query(sql)
+        @db.query(sql)
+      end
+
+      def escape(str)
+        @db.escape(str.to_s)
+      end
+    end
+  end
+
   class Model
     include Validatable
-
-    @@db = Mysql2::Client.new(host: 'localhost', username: 'testos', password: 'secretos', database: Config.db(:database))
 
     attr_accessor :id, :errors
 
@@ -105,7 +117,7 @@ module ORM
         (#{k.join(', ')})
         VALUES ('#{v.join("', '")}')
       SQL
-      @@db.query(sql) # returns nil
+      DB.query(sql)
       attrs = _find(_last_id)
       update_attributes(attrs)
       true
@@ -131,14 +143,14 @@ module ORM
 
     # persistable
     def update_with(id, k, v)
-      v = v.map { |v| @@db.escape(v.to_s) }
+      v = v.map { |v| DB.escape(v) }
       s = k.zip(v).map { |s| "#{s[0]}='#{s[1]}'" }.join(', ')
       sql = <<-SQL
         UPDATE #{table}
         SET #{s}
         WHERE id=#{id}
       SQL
-      @@db.query(sql)
+      DB.query(sql)
       update_attributes(_find(id)) 
     end
 
@@ -150,7 +162,7 @@ module ORM
         AS id FROM #{table}
         LIMIT 1
       SQL
-      res = @@db.query(sql)
+      res = DB.query(sql)
       res.first['id']
     end
 
@@ -160,7 +172,7 @@ module ORM
         WHERE id=#{id}
         LIMIT 1
       SQL
-      @@db.query(sql).first
+      DB.query(sql).first
     end
 
     class << self
@@ -178,21 +190,21 @@ module ORM
       def find(id)
         sql = <<-SQL
           SELECT * FROM #{table}
-          WHERE id='#{@@db.escape(id.to_s)}'
+          WHERE id='#{DB.escape(id)}'
           LIMIT 1
         SQL
-        res = @@db.query(sql).map(&method(:new)).first
+        res = DB.query(sql).map(&method(:new)).first
         res ? res : raise(RecordNotFound, "#{self} not found with id=#{id}")
       end
 
       def find_by(field, value)
-        value = @@db.escape(value.to_s)
+        value = DB.escape(value.to_s)
         sql = <<-SQL
           SELECT * FROM #{table}
           WHERE #{field}='#{value}'
           LIMIT 1
         SQL
-        res = @@db.query(sql)
+        res = DB.query(sql)
         res.map(&method(:new)).first
       end
 
@@ -204,13 +216,13 @@ module ORM
 
       def all
         sql = "SELECT * FROM #{table}"
-        res = @@db.query(sql)
+        res = DB.query(sql)
         res.map(&method(:new))
       end
 
       def count
         sql = "SELECT COUNT(*) AS count FROM #{table}"
-        res = @@db.query(sql)
+        res = DB.query(sql)
         res.first['count']
       end
 
@@ -218,13 +230,13 @@ module ORM
       def where(conds)
         k = conds.keys
         v = conds.values
-        v = v.map { |v| @@db.escape(v.to_s) }
+        v = v.map { |v| DB.escape(v.to_s) }
         s = k.zip(v).map { |s| "#{s[0]}='#{s[1]}'" }.join(' AND ')
         sql = <<-SQL
           SELECT * FROM #{table}
           WHERE #{s}
         SQL
-        res = @@db.query(sql)
+        res = DB.query(sql)
         res.map(&method(:new))
       end
 
@@ -234,13 +246,13 @@ module ORM
           DELETE FROM #{table}
           WHERE id=#{record.id}
         SQL
-        @@db.query(sql)
+        DB.query(sql)
         record
       end
 
       def destroy_all
         sql = "DELETE FROM #{table}"
-        @@db.query(sql)
+        DB.query(sql)
       end
     end
   end
