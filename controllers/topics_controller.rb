@@ -14,55 +14,20 @@ class TopicsController < Sinatra::Base
     slim :'topics/show'
   end
 
-  # # New.
-  # get '/categories/new' do
-  #   @category = Category.new
-  #   slim :'categories/new'
-  # end
+  # New.
+  get '/categories/:category_id/topics/new' do
+    @topic = Topic.new
+    slim :'topics/new'
+  end
 
-  # # Show.
-  # get '/categories/:id' do
-  #   @category = Category.find(params[:id])
-  #   slim :'categories/show'
-  # end
-
-  # # Create.
-  # post '/categories' do
-  #   @category = Category.new(params[:category])
-  #   if @category.save
-  #     redirect to(url('/'))
-  #   else
-  #     slim :'categories/new'
-  #   end
-  # end
-
-  # # Edit.
-  # get '/categories/:id/edit' do
-  #   @category = Category.find(params[:id])
-  #   slim :'categories/edit'
-  # end
-
-  # # Update.
-  # put '/categories/:id' do
-  #   @category = Category.find(params[:id])
-  #   if @category.update(params[:category])
-  #     redirect to(url('/'))
-  #   else
-  #     slim :'categories/edit'
-  #   end
-  # end
-  # 
-  # # Delete.
-  # get '/categories/:id/delete' do
-  #   Category.destroy(params[:id])
-  #   redirect to(url('/'))
-  # end
-
-  # private
-  # def check_ownership!
-  #   if params[:id] != session[:user_id].to_s
-  #     redirect to(url("/login"))
-  #   end
-  # end
+  # Create.
+  post '/categories/:category_id/topics' do
+    @topic = Topic.new(params[:topic])
+    if @topic.save
+      redirect to(url("/topics/#{@topic.id}"))
+    else
+      slim :'topics/new'
+    end
+  end
 end
 
