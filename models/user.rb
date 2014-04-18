@@ -3,8 +3,6 @@ require 'bcrypt'
 require_relative '../lib/model'
 
 class User < ORM::Model
-  @@db = Mysql2::Client.new(host: 'localhost', username: 'testos', password: 'secretos', database: ORM::Config.db(:database))
-
   # Table name.
   table :users
 
