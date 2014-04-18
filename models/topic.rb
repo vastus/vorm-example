@@ -19,7 +19,7 @@ class Topic < ORM::Model
   end
 
   validates :category_id, -> (topic) do
-    if topic.category_id.nil? || topic.title.to_s.strip.empty?
+    if topic.category_id.nil? || topic.category_id.to_s.strip.empty?
       "cannot be empty"
     end
   end
