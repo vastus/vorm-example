@@ -14,5 +14,5 @@ prog = Category.create(name: 'Programming', description: 'Datatypes, algorithms,
 street = Category.create(name: 'Cholo', description: 'Street man is the man. Hobos, hobas and such.')
 
 Topic.destroy_all
-Topic.create(title: 'Present yourself', body: 'Everybody say my name!', category_id: gen.id)
+Topic.create(title: 'Present yourself', body: 'Everybody say my name!', category_id: gen.id, user_id: juhoh.id)
 
