@@ -29,5 +29,15 @@ class Topic < ORM::Model
       "cannot be empty"
     end
   end
+
+  # belongs_to :category
+  def category
+    Category.find(category_id)
+  end
+
+  # belongs_to :user
+  def user
+    User.find(user_id)
+  end
 end
 
