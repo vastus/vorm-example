@@ -1,0 +1,23 @@
+#topic.new
+  h1 Post a Topic
+  form(action="/categories/#{params[:category_id]}/topics" method="POST")
+    - if @topic.errors.any?
+      h2 Errors
+      ul
+        - for field, messages in @topic.errors
+          - for msg in messages
+            li = "#{field.capitalize} #{msg}"
+    input(type="hidden" name="topic[user_id]" value="#{session[:user_id]}")
+    input(type="hidden" name="topic[category_id]"
+      value="#{params[:category_id]}")
+    .field
+      label(for="topic_title") Title
+      input(id="topic_title" name="topic[title]" type="text"
+        value="#{@topic.title}" size="80" placeholder="Topic title")
+    .field
+      label(for="topic_body") Body
+      textarea(id="topic_body" name="topic[body]"
+        cols="80" rows="7") = @topic.body
+    .button
+      input(type="submit" value="Create")
+
