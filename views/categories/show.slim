@@ -8,6 +8,8 @@
           a(href="/topics/#{topic.id}") = topic.title
       .body
         = topic.body
+      .meta
+        .by = "by #{topic.user.username}"
 
   .actions
     a(href="/categories/#{@category.id}/topics/new") New Topic
