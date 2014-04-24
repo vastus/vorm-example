@@ -43,5 +43,16 @@ class Category < ORM::Model
   def topics
     Topic.where(category_id: id)
   end
+
+  def replies
+    sql = <<-SQL
+      SELECT * FROM replies r
+      INNER JOIN topics t
+        ON r.topic_id = t.id
+      WHERE t.category_id = #{id}
+    SQL
+    puts sql
+    return []
+  end
 end
 
