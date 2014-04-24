@@ -3,6 +3,7 @@ ENV['RACK_ENV'] ||= 'development'
 require_relative '../models/user'
 require_relative '../models/category'
 require_relative '../models/topic'
+require_relative '../models/reply'
 
 User.destroy_all
 testos = User.create(username: 'testos', email: 'testos@teroni.fi', password: 'secretos', password_confirmation: 'secretos')
@@ -14,5 +15,8 @@ prog = Category.create(name: 'Programming', description: 'Datatypes, algorithms,
 street = Category.create(name: 'Cholo', description: 'Street man is the man. Hobos, hobas and such.')
 
 Topic.destroy_all
-Topic.create(title: 'Present yourself', body: 'Everybody say my name!', category_id: gen.id, user_id: juhoh.id)
+pres = Topic.create(title: 'Present yourself', body: 'Everybody say my name!', category_id: gen.id, user_id: juhoh.id)
+
+Reply.destroy_all
+Reply.create(message: 'Howdy there neighbor, this is Frank.', topic_id: pres.id, user_id: testos.id)
 
