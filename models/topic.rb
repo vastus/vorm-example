@@ -1,3 +1,5 @@
+require_relative './reply'
+
 class Topic < ORM::Model
   # Table name.
   table :topics
@@ -38,6 +40,11 @@ class Topic < ORM::Model
   # belongs_to :user
   def user
     User.find(user_id)
+  end
+
+  # has many
+  def replies
+    Reply.where(topic_id: id)
   end
 end
 
