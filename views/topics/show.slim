@@ -1,9 +1,27 @@
-#topic
+#topic.horiz
   .title
     h2 = @topic.title
   .body
     = @topic.body
   .meta
     .by
-      = @topic.user.username
+      a(href="/users/#{@topic.user.id}") = @topic.user.username
+
+#replies
+  - for reply in @topic.replies
+    .reply.horiz
+      .message = reply.message
+      .meta
+        .by
+          a(href="/users/#{reply.user.id}") = reply.user.username
+
+  #reply.new
+    h2 Reply to this Topic
+    form(action="/topics/#{@topic.id}/replies/new" method="POST")
+      input(type="hidden" name="reply[topic_id]" value="#{@topic.id}")
+      input(type="hidden" name="reply[user_id]" value="#{session[:user_id]}")
+      .field
+        textarea(name="reply[message]" cols="80" rows="7")
+      .button
+        input(type="submit" value="Send")
 
