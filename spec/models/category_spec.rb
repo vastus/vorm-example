@@ -380,6 +380,18 @@ describe Category do
         expect(found[0].category_id).to eq(topic.category_id)
       end
     end
+
+    describe "#replies" do
+      before { category.save }
+
+      it "exists" do
+        expect(category).to respond_to(:replies)
+      end
+
+      it "returns an empty array when no replies exist" do
+        expect(category.replies).to eq([])
+      end
+    end
   end
 end
 
