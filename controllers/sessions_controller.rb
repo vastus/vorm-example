@@ -1,12 +1,4 @@
-require 'sinatra/base'
-require 'slim'
-
-# make sure relative to config.ru's path
-require './models/user'
-
-class SessionsController < Sinatra::Base
-  set :views, 'views'
-
+class SessionsController < AppController
   # New.
   ['/login', '/sessions/new/?'].each do |path|
     get path do
@@ -20,7 +12,8 @@ class SessionsController < Sinatra::Base
       user = User.find_by(:username, params[:username])
       if user && user.authenticate(params[:password])
         session[:user_id] = user.id
-        redirect to(url("/users/#{user.id}"))
+        url = params[:ref].empty? ? url("/users/#{user.id}") : params[:ref]
+        redirect to(url)
       else
         @errors = "Username or password mismatch"
         slim :'sessions/new'
@@ -28,12 +21,18 @@ class SessionsController < Sinatra::Base
     end
   end
 
-  # Delete.
-  ['/login', '/sessions'].each do |path|
+  # Destroy (DELETE).
+  ['/logout', '/sessions'].each do |path|
     delete path do
       session[:user_id] = nil
       redirect to(url("/"))
     end
+  end
+
+  # Destroy (GET).
+  get '/logout' do
+    session[:user_id] = nil
+    redirect to(url("/"))
   end
 end
 
