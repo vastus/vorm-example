@@ -7,7 +7,7 @@ class User < ORM::Model
   table :users
 
   # Fields for model.
-  fields :email, :username, :password_hash, :password_salt
+  fields :email, :username, :role, :password_hash, :password_salt
 
   # Virtual attrs
   attr_accessor :password, :password_confirmation
@@ -33,6 +33,12 @@ class User < ORM::Model
 
   validates :password, -> (user) do
     if user.password.nil? || user.password.strip.empty?
+      "cannot be empty"
+    end
+  end
+
+  validates :role, -> (user) do
+    if user.role.nil? || user.role.to_s.strip.empty?
       "cannot be empty"
     end
   end
@@ -68,32 +74,24 @@ class User < ORM::Model
     password_hash == hashed
   end
 
-  def admin?
-    true
-  end
-
   def save
-    return false if !valid?
     encrypt_password
     super()
   end
 
-  def update(params)
-    self.username = params[:username]
-    self.email = params[:email]
-    valid?
-    if errors[:username].empty? && errors[:email].empty?
-      return false
-    end
-    k = [:username, :email]
-    v = k.map(&method(:send))
-    s = (k.zip(v)).map{|p| "#{p[0]}='#{p[1]}'" }.join(', ')
+  def role?(role)
+    self.role == role.to_s
+  end
+
+  def unread
     sql = <<-SQL
-      UPDATE #{table}
-      SET #{s}
-      WHERE id=#{id}
+      SELECT t.id, t.title, t.body, t.user_id, t.category_id FROM topics t
+      JOIN readtopics r
+        ON r.topic_id = t.id
+      WHERE t.user_id != #{self.id}
     SQL
-    @@db.query(sql)
+    res = ORM::DB.query(sql)
+    res.map { |topic_attrs| Topic.new(topic_attrs) }
   end
 
   private
