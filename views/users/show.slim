@@ -6,8 +6,11 @@
   .email
     = @user.email
 
-  .actions
-    p
-      a(href="/users/#{@user.id}/edit") Edit
-      |  your profile.
+  - if current_user.id == session[:user_id]
+    .actions
+      p
+        a(href="/unread") Unread topics
+      p
+        a(href="/users/#{@user.id}/edit") Edit
+        |  your profile.
 
