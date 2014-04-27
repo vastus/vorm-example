@@ -2,6 +2,8 @@ require 'sinatra/base'
 
 #require './config'
 require './models/concerns/helpers'
+require './models/category'
+require './controllers/app_controller'
 require './controllers/users_controller'
 require './controllers/sessions_controller'
 require './controllers/categories_controller'
