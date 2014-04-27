@@ -6,7 +6,7 @@
   .email
     = @user.email
 
-  - if current_user.id == session[:user_id]
+  - if current_user && current_user.id == session[:user_id]
     .actions
       p
         a(href="/unread") Unread topics
