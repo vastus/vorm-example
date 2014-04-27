@@ -3,10 +3,14 @@ require 'spec_helper'
 describe User do
   before do
     User.destroy_all
+    Topic.destroy_all
+    ReadTopics.destroy_all
   end
 
   after(:all) do
     User.destroy_all
+    Topic.destroy_all
+    ReadTopics.destroy_all
   end
 
   it "class knows its table" do
@@ -168,7 +172,8 @@ describe User do
     let(:valid_user) { User.new(username: 'testos', 
                                 email: 'testos@teroni.fi',
                                 password: 'S3cret0s',
-                                password_confirmation: 'S3cret0s') }
+                                password_confirmation: 'S3cret0s',
+                                role: 'user') }
 
     let(:invalid_user) { User.new }
 
