@@ -1,4 +1,5 @@
 require_relative './reply'
+require_relative './read_topics'
 
 class Topic < ORM::Model
   # Table name.
@@ -32,6 +33,12 @@ class Topic < ORM::Model
     end
   end
 
+  # before saves
+  def save
+    super()
+    create_read_topics
+  end
+
   # belongs_to :category
   def category
     Category.find(category_id)
@@ -45,6 +52,11 @@ class Topic < ORM::Model
   # has many
   def replies
     Reply.where(topic_id: id)
+  end
+
+  private
+  def create_read_topics
+    ReadTopics.create(user_id: user_id, topic_id: id)
   end
 end
 
