@@ -15,13 +15,17 @@
         .by
           a(href="/users/#{reply.user.id}") = reply.user.username
 
-  #reply.new
-    h2 Reply to this Topic
-    form(action="/topics/#{@topic.id}/replies/new" method="POST")
-      input(type="hidden" name="reply[topic_id]" value="#{@topic.id}")
-      input(type="hidden" name="reply[user_id]" value="#{session[:user_id]}")
-      .field
-        textarea(name="reply[message]" cols="80" rows="7")
-      .button
-        input(type="submit" value="Send")
+  - if current_user.nil?
+    - puts params
+    h2 <a href="/login?ref=#{url}">Login</a> to Reply to this Topic
+  - else
+    #reply.new
+      h2 Reply to this Topic
+      form(action="/topics/#{@topic.id}/replies/new" method="POST")
+        input(type="hidden" name="reply[topic_id]" value="#{@topic.id}")
+        input(type="hidden" name="reply[user_id]" value="#{session[:user_id]}")
+        .field
+          textarea(name="reply[message]" cols="80" rows="7")
+        .button
+          input(type="submit" value="Send")
 
