@@ -1,12 +1,7 @@
 require 'sinatra/base'
 require 'slim'
 
-# make sure relative to config.ru's path
-require './models/user'
-
-class UsersController < Sinatra::Base
-  set :views, 'views'
-
+class UsersController < AppController
   ['/users/:id/edit'].each do |path|
     before path do
       check_ownership!
@@ -30,6 +25,8 @@ class UsersController < Sinatra::Base
   # Create.
   post '/users' do
     @user = User.new(params[:user])
+    # default to basic user role
+    @user.role = 'user'
     if @user.save
       redirect to(url('/'))
     else
@@ -45,19 +42,11 @@ class UsersController < Sinatra::Base
 
   # Update.
   post '/users/:id' do
-    "To be implemented."
-    # @user = User.find(params[:id])
-    # if @user.update(params[:user])
-    #   redirect to(url("/users/#{@user.id}"))
-    # else
-    #   slim :'users/edit'
-    # end
-  end
-
-  private
-  def check_ownership!
-    if params[:id] != session[:user_id].to_s
-      redirect to(url("/login"))
+    @user = User.find(params[:id])
+    if @user.update(params[:user])
+      redirect to(url("/users/#{@user.id}"))
+    else
+      slim :'users/edit'
     end
   end
 end
