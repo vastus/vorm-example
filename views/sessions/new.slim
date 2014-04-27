@@ -3,6 +3,7 @@
   form(action="/sessions" method="POST")
     #errors
       = @errors if @errors
+    input(type="hidden" name="ref" value="#{params[:ref]}")
     .field
       label(for="username") Username
       input(id="username" name="username" type="text" placeholder="johndoe")
