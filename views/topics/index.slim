@@ -1,0 +1,13 @@
+#topics
+  - if @topics.count < 1
+    h2 No unread topics!
+
+  - for topic in @topics
+    .title
+      h2
+        a(href="/topics/#{topic.id}") = topic.title
+    .body
+      = topic.body
+    .meta
+      .by = "by #{topic.user.username}"
+
