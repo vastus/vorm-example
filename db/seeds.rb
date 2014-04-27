@@ -6,8 +6,10 @@ require_relative '../models/topic'
 require_relative '../models/reply'
 
 User.destroy_all
-testos = User.create(username: 'testos', email: 'testos@teroni.fi', password: 'secretos', password_confirmation: 'secretos')
-juhoh = User.create(username: 'juhoh', email: 'juhoh@lawdy.fi', password: 'juhoh', password_confirmation: 'juhoh')
+testos = User.create(username: 'testos', email: 'testos@teroni.fi', role: 'user', password: 'secretos', password_confirmation: 'secretos')
+juhoh = User.create(username: 'juhoh', email: 'juhoh@lawdy.fi', role: 'admin', password: 'juhoh', password_confirmation: 'juhoh')
+admin = User.create(username: 'admin', email: 'admin@lawdy.fi', role: 'admin', password: 'admin', password_confirmation: 'admin')
+user = User.create(username: 'user', email: 'user@lawdy.fi', role: 'user', password: 'user', password_confirmation: 'user')
 
 Category.destroy_all
 gen = Category.create(name: 'General', description: 'General discussions. Can be (almost) anything.')
