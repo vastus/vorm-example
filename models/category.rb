@@ -46,13 +46,13 @@ class Category < ORM::Model
 
   def replies
     sql = <<-SQL
-      SELECT * FROM replies r
+      SELECT r.message, r.user_id FROM replies r
       INNER JOIN topics t
         ON r.topic_id = t.id
       WHERE t.category_id = #{id}
     SQL
-    puts sql
-    return []
+    res = ORM::DB.query(sql)
+    res.map { |reply_attrs| Reply.new(reply_attrs) }
   end
 end
 
