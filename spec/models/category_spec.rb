@@ -384,6 +384,8 @@ describe Category do
     describe "#replies" do
       before { category.save }
 
+      let(:another_category) { Category.create(name: "Another", description: "Dummy category description") }
+
       it "exists" do
         expect(category).to respond_to(:replies)
       end
