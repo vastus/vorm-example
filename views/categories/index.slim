@@ -15,7 +15,7 @@
         .topics-count
           .count = "#{category.topics.size} topics"
         .replies-count
-          .count 121 replies
+          .count = "#{category.replies.count} replies"
       - if admin?
         .actions
           ul
@@ -24,6 +24,7 @@
             li
               a(href="/categories/#{category.id}/delete") Delete
 
-  .actions
-    a(href="/categories/new") New Category
+  - if admin?
+    .actions
+      a(href="/categories/new") New Category
 
