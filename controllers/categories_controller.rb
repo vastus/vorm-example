@@ -1,29 +1,8 @@
-require 'sinatra/base'
-require 'slim'
-require 'ap'
-
-require_relative '../models/category'
-
-class CategoriesController < Sinatra::Base
-  set :views, 'views'
-  helpers Helpers
-
-  # ['/users/:id/edit'].each do |path|
-  #   before path do
-  #     check_ownership!
-  #   end
-  # end
-
+class CategoriesController < AppController
   # Index.
   get '/' do
     @categories = Category.all
     slim :'categories/index'
-  end
-
-  # New.
-  get '/categories/new' do
-    @category = Category.new
-    slim :'categories/new'
   end
 
   # Show.
@@ -32,8 +11,16 @@ class CategoriesController < Sinatra::Base
     slim :'categories/show'
   end
 
+  # New.
+  get '/categories/new' do
+    authorize!
+    @category = Category.new
+    slim :'categories/new'
+  end
+
   # Create.
   post '/categories' do
+    authorize!
     @category = Category.new(params[:category])
     if @category.save
       redirect to(url('/'))
@@ -44,12 +31,14 @@ class CategoriesController < Sinatra::Base
 
   # Edit.
   get '/categories/:id/edit' do
+    authorize!
     @category = Category.find(params[:id])
     slim :'categories/edit'
   end
 
   # Update.
   put '/categories/:id' do
+    authorize!
     @category = Category.find(params[:id])
     if @category.update(params[:category])
       redirect to(url('/'))
@@ -60,16 +49,9 @@ class CategoriesController < Sinatra::Base
   
   # Delete.
   get '/categories/:id/delete' do
+    authorize!
     Category.destroy(params[:id])
     redirect to(url('/'))
   end
-
-  private
-  def check_ownership!
-    if params[:id] != session[:user_id].to_s
-      redirect to(url("/login"))
-    end
-  end
-
 end
 
